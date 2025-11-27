@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-# Configuração de Estilo para ficar "Bonito" e Profissional
 plt.rcParams.update({
     'font.size': 10,
     'axes.labelsize': 11,
@@ -12,32 +11,17 @@ plt.rcParams.update({
     'figure.titlesize': 14
 })
 
-# ==========================================
-# 1. DADOS (Da sua tabela)
-# ==========================================
 tamanhos = np.array([10000, 500000, 2000000])
-
-# Tempos Médios (ms)
 py_media = np.array([21.9416, 1839.4311, 12027.9302])
 cpp_media = np.array([0.6912, 48.7736, 253.0781])
-
-# Desvios Padrão
 py_desvio = np.array([0.1733, 36.7408, 358.8735])
 cpp_desvio = np.array([0.1841, 0.5261, 16.2405])
-
-# ==========================================
-# 2. FUNÇÕES
-# ==========================================
 
 def calcular_teorico(n_reais, tempos_reais):
     """Gera a curva teórica k * n * log(n) ajustada."""
     n_safe = np.array(n_reais, dtype=float)
     complexidade = n_safe * np.log2(n_safe)
-    
-    # Fator de proporcionalidade k médio
     k = np.mean(tempos_reais / complexidade)
-    
-    # Gera pontos para a linha suave
     n_suave = np.linspace(min(n_reais), max(n_reais), 200)
     curva_teorica = k * (n_suave * np.log2(n_suave))
     return n_suave, curva_teorica
@@ -68,19 +52,10 @@ def anotar_valores(ax, xs, ys, desvios, cor_texto='black', offset=15):
                     fontsize=9,
                     bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="gray", alpha=0.9))
 
-# ==========================================
-# 3. PLOTAGEM
-# ==========================================
-
 fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(20, 7))
 fig.suptitle('Análise de Desempenho Heap Sort: Teoria vs Prática', fontweight='bold', y=0.98)
-
-# --- GRÁFICO 1: COMPARATIVO DIRETO (Escala Log) ---
-# Linhas principais
 ax1.plot(tamanhos, py_media, 'o-', color='#1f77b4', linewidth=2, label='Python (Média)')
 ax1.plot(tamanhos, cpp_media, 's-', color='#d62728', linewidth=2, label='C++ (Média)')
-
-# Médias Móveis (Linhas tracejadas)
 mm_py = calcular_media_movel(py_media)
 ax1.plot(tamanhos[len(tamanhos)-len(mm_py):], mm_py, '--', color='navy', linewidth=2, alpha=0.7, label='Média Móvel (Py)')
 
@@ -98,12 +73,7 @@ for x, y in zip(tamanhos, py_media):
     ax1.annotate(f"{y:.0f}", (x, y), xytext=(0, 5), textcoords="offset points", ha='center', color='#1f77b4', fontweight='bold')
 for x, y in zip(tamanhos, cpp_media):
     ax1.annotate(f"{y:.1f}", (x, y), xytext=(0, -15), textcoords="offset points", ha='center', color='#d62728', fontweight='bold')
-
-
-# --- GRÁFICO 2: DETALHE PYTHON ---
-# Dados Reais com Barras de Erro E LINHA CONECTORA (fmt='o-' adiciona a linha)
 ax2.errorbar(tamanhos, py_media, yerr=py_desvio, fmt='o-', color='#1f77b4', ecolor='black', capsize=5, label='Prático (Curva Medida)', linewidth=2)
-# Curva Teórica
 n_teo, tempo_teo = calcular_teorico(tamanhos, py_media)
 ax2.plot(n_teo, tempo_teo, color='black', linestyle=':', linewidth=2, label=r'Teórico $\Theta(n \log n)$')
 
@@ -115,12 +85,7 @@ ax2.set_ylabel('Tempo (ms)')
 ax2.legend()
 ax2.grid(True, linestyle='--', alpha=0.4)
 ax2.set_ylim(top=max(py_media)*1.15) 
-
-
-# --- GRÁFICO 3: DETALHE C++ ---
-# Dados Reais com Barras de Erro E LINHA CONECTORA
 ax3.errorbar(tamanhos, cpp_media, yerr=cpp_desvio, fmt='s-', color='#d62728', ecolor='black', capsize=5, label='Prático (Curva Medida)', linewidth=2)
-# Curva Teórica
 n_teo_cpp, tempo_teo_cpp = calcular_teorico(tamanhos, cpp_media)
 ax3.plot(n_teo_cpp, tempo_teo_cpp, color='black', linestyle=':', linewidth=2, label=r'Teórico $\Theta(n \log n)$')
 
