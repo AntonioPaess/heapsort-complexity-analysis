@@ -92,7 +92,7 @@ python3 automacao_teste.py
 
 Expected Output:
 
-![Output](<Captura de Tela 2025-11-21 às 16.24.09.png>)
+<img width="625" height="268" alt="Captura de Tela 2025-11-21 às 16 24 09" src="https://github.com/user-attachments/assets/fb7e49a8-1d56-4098-a5d6-0cfeb82c1ae8" />
 
 ### 3. Generate the Comparison Graph
 
